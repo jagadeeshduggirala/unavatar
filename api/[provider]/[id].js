@@ -1,4 +1,4 @@
-import unavatarCore from '@unavatar/core'
+import unavatarCore from '../../src/index.js'
 
 const unavatar = unavatarCore()
 
