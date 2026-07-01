@@ -1,19 +1,28 @@
-import unavatar from '@unavatar/core'
+import unavatarCore from '@unavatar/core'
+
+const unavatar = unavatarCore()
 
 export default async function handler(req, res) {
   const { provider, id } = req.query
 
   try {
-    const result = await unavatar.resolve(id, provider)
+    if (!unavatar[provider]) {
+      return res.status(404).json({
+        success: false,
+        error: `Unknown provider: ${provider}`
+      })
+    }
 
-    if (!result?.url) {
+    const result = await unavatar[provider](id)
+
+    if (!result?.data) {
       return res.status(404).json({
         success: false,
         error: 'Avatar not found'
       })
     }
 
-    return res.redirect(result.url)
+    return res.redirect(result.data)
   } catch (error) {
     return res.status(500).json({
       success: false,
